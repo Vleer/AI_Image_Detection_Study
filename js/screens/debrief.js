@@ -19,9 +19,9 @@
       ui.setProgress(1, 'Complete');
       ui.setFooter('Session ' + session.participantId);
 
-      var pre = RAI.store.summarise(function (t) { return t.phase === 'baseline'; });
-      var post = RAI.store.summarise(function (t) { return t.phase === 'posttest'; });
-      var training = RAI.store.summarise(function (t) { return t.phase === 'priming'; });
+      var pre = RAI.store.summarise(function (t) { return t.phase === 'baseline' && !t.isAttentionCheck; });
+      var post = RAI.store.summarise(function (t) { return t.phase === 'posttest' && !t.isAttentionCheck; });
+      var training = RAI.store.summarise(function (t) { return t.phase === 'priming' && !t.isAttentionCheck; });
       var ratios = (session.condition.primingRatios || []).map(function (r) {
         return Math.round(r * 100) + '%';
       }).join(', ');

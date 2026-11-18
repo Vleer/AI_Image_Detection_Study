@@ -64,20 +64,35 @@
                    pool.length + ' are available; some scenes will repeat.');
     }
 
+    var allocator = new RAI.stimuli.Allocator(pool, rng);
     var ctx = {
       session: session,
       rng: rng,
-      allocator: new RAI.stimuli.Allocator(pool, rng)
+      allocator: allocator
     };
 
     session.condition.primingRatios = RAI.screens.priming.assignCondition(rng);
     session.condition.aiSourceOrder = rng.shuffle(cfg.aiSources);
-    RAI.store.save();
     RAI.store.logEvent('session_start', {
       poolSize: pool.length,
       bucketsNeeded: need,
       ratios: session.condition.primingRatios
     });
+
+    // Build all trial sets up front so images can start loading immediately.
+    var ratio = session.condition.primingRatios[0];
+    ctx.trials = {
+      baseline: RAI.stimuli.buildTrials({ allocator: allocator, count: cfg.trials.baseline, aiRatio: 0.5, phase: 'baseline', rng: rng }),
+      priming: RAI.stimuli.buildTrials({ allocator: allocator, count: cfg.trials.primingBlock, aiRatio: ratio, phase: 'priming', block: 0, rng: rng }),
+      posttest: RAI.stimuli.buildTrials({ allocator: allocator, count: cfg.trials.posttest, aiRatio: 0.5, phase: 'posttest', rng: rng })
+    };
+
+    // Start loading images as soon as the page opens; progress through phases in background.
+    RAI.stimuli.preloadAll(ctx.trials.baseline).then(function () {
+      return RAI.stimuli.preloadAll(ctx.trials.priming);
+    }).then(function () {
+      return RAI.stimuli.preloadAll(ctx.trials.posttest);
+    }).catch(function () {});
 
     var S = RAI.screens;
 
@@ -112,18 +127,20 @@
     });
 
     function runJudgement(phase, count, spanKey, step) {
-      var trials = RAI.stimuli.buildTrials({
-        allocator: ctx.allocator,
-        count: count,
-        aiRatio: 0.5,          // pre- and post-test are balanced by design
-        phase: phase,
-        rng: rng
-      });
+      var phaseLabel = phase === 'baseline' ? 'Phase 1'
+        : phase === 'posttest' ? 'Phase 3 – you will no longer receive feedback'
+        : phase;
+      var explanation = phase === 'baseline'
+        ? 'Baseline: 20 images, no feedback.'
+        : 'Test: 40 images, no feedback.';
+      var trials = phase === 'baseline' ? ctx.trials.baseline : ctx.trials.posttest;
       RAI.store.logEvent(phase + '_start', { n: trials.length });
       return S.judgement.runBlock({
         trials: trials,
         showFeedback: false,
-        question: 'Is this a real photograph or AI-generated?',
+        question: 'Is this image real or AI-generated?',
+        phaseLabel: phaseLabel,
+        explanation: explanation,
         step: step,
         progressBase: SPAN[spanKey].base,
         progressSpan: SPAN[spanKey].span
@@ -142,7 +159,7 @@
       .then(function () {
         ctx.session.notes.stimulusReuse = ctx.allocator.reuseCount;
         RAI.store.save();
-        return RAI.store.finish();
+        return Promise.resolve();
       })
       .then(function () { return show(S.debrief, ctx); })
       .catch(function (err) {

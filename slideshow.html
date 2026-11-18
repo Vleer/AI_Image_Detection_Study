@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Study Slideshow</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background:#0f1115; color:#eef1f6; margin:0; display:grid; place-items:center; min-height:100vh; }
+    .deck { max-width:900px; width:100%; padding:1.5rem; text-align:center; }
+    img { max-width:100%; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,.4); }
+    .cap { margin-top:1rem; color:#a3adbf; font-size:.95rem; }
+    .controls { margin-top:1rem; display:flex; gap:.5rem; justify-content:center; }
+    button { padding:.6rem 1rem; border-radius:8px; border:1px solid #2a3140; background:#1f2530; color:#eef1f6; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <img id="slide" src="screenshots/welcome.png" alt="slide">
+    <div class="cap" id="cap"></div>
+    <div class="controls">
+      <button onclick="prev()">Prev</button>
+      <button onclick="next()">Next</button>
+    </div>
+  </div>
+  <script>
+    const slides = [
+      { src:'screenshots/welcome.png', cap:'Welcome screen' },
+      { src:'screenshots/phase1.png', cap:'Phase 1 - no feedback' },
+      { src:'screenshots/phase2.png', cap:'Phase 2 - with feedback (before answer)' },
+      { src:'screenshots/phase2-feedback.png', cap:'Phase 2 - result shown under the photo' },
+      { src:'screenshots/phase3.png', cap:'Phase 3 - no feedback' }
+    ];
+    let i = 0;
+    const img = document.getElementById('slide');
+    const cap = document.getElementById('cap');
+    function show(){ img.src = slides[i].src; cap.textContent = slides[i].cap; }
+    function next(){ i = (i+1)%slides.length; show(); }
+    function prev(){ i = (i-1+slides.length)%slides.length; show(); }
+    show();
+    setInterval(next, 3000);
+  </script>
+</body>
+</html>

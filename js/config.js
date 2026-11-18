@@ -26,6 +26,12 @@
 
     aiSources: ['chatgpt', 'gemini'],
 
+    // One attention-check image per phase (same file for every participant).
+    attentionChecks: [
+      'Photos/attention/attention-01.png',
+      'Photos/attention/attention-02.png',
+      'Photos/attention/attention-03.png'
+    ],
     // A bucket holds three versions of the same scene. Showing a participant
     // two versions of one scene would leak the answer, so each bucket is used
     // at most once for the entire session.

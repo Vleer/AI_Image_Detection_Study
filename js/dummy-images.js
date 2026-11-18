@@ -361,6 +361,11 @@
    */
   function makeImage(category, bucketSeed, variant) {
     var painter = PAINTERS[category] || drawObject;
+    // Orientation: landscapes/interiors 3:2, faces/objects 2:3.
+    var portrait = (category === 'faces' || category === 'object');
+    W = portrait ? 800 : 1200;
+    H = portrait ? 1200 : 800;
+
     // Same seed for all variants -> same underlying scene geometry.
     var r = RAI.rng.make('scene:' + category + ':' + bucketSeed);
     var base = r() * 360;
@@ -368,6 +373,10 @@
     var p = { hue: base + tweak.hue, sat: tweak.sat, light: tweak.light };
 
     var inner = painter(r, p);
+    if (portrait) {
+      // Rotate the landscape scene to fill the portrait canvas.
+      inner = '<g transform="translate(' + W + ',0) rotate(90)">' + inner + '</g>';
+    }
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '">' +
       inner +
       (RAI.config && RAI.config.debug
