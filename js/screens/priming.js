@@ -58,8 +58,8 @@
             '<p class="muted">Take a breather if you need one, then continue when you are ready.</p>';
 
         return showIntro({
-          eyebrow: isFirst ? 'Part 2 of 3' : 'Continuing',
-          title: isFirst ? 'Now with feedback' : 'Next set',
+          eyebrow: isFirst ? 'Phase 2' : 'Continuing',
+          title: isFirst ? 'Phase 2 \u2013 you will now receive feedback' : 'Next set',
           body: intro,
           cta: isFirst ? 'Start' : 'Continue',
           progress: span.base + perBlock * blockIndex,
