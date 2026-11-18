@@ -16,8 +16,18 @@
     var cfg = RAI.config;
 
     if (cfg.forcedPrimingRatio !== null) return [cfg.forcedPrimingRatio];
-    if (cfg.primingDesign === 'within') return rng.shuffle(cfg.primingRatios);
-    return [rng.pick(cfg.primingRatios)];
+    if (cfg.primingDesign === 'within') return rng.shuffle(cfg.primingRatios.slice());
+    // Balanced randomization: assign to condition with fewest completed participants.
+    var counts = (RAI.store && RAI.store.getConditionCounts) ? RAI.store.getConditionCounts() : {};
+    var min = Infinity;
+    cfg.primingRatios.forEach(function (r) {
+      var c = counts[String(r)] || 0;
+      if (c < min) min = c;
+    });
+    var candidates = cfg.primingRatios.filter(function (r) {
+      return (counts[String(r)] || 0) === min;
+    });
+    return [rng.pick(candidates)];
   }
 
   function ratioLabel(r) { return Math.round(r * 100) + '%'; }
@@ -37,7 +47,7 @@
 
     ratios.forEach(function (ratio, blockIndex) {
       chain = chain.then(function () {
-        var trials = RAI.stimuli.buildTrials({
+        var trials = (ctx.trials && ctx.trials.priming) ? ctx.trials.priming : RAI.stimuli.buildTrials({
           allocator: ctx.allocator,
           count: cfg.trials.primingBlock,
           aiRatio: ratio,
@@ -58,8 +68,8 @@
             '<p class="muted">Take a breather if you need one, then continue when you are ready.</p>';
 
         return showIntro({
-          eyebrow: isFirst ? 'Part 2 of 3' : 'Continuing',
-          title: isFirst ? 'Now with feedback' : 'Next set',
+          eyebrow: isFirst ? 'Phase 2' : 'Continuing',
+          title: isFirst ? 'Phase 2 \u2013 you will now receive feedback' : 'Next set',
           body: intro,
           cta: isFirst ? 'Start' : 'Continue',
           progress: span.base + perBlock * blockIndex,
@@ -69,14 +79,16 @@
           return RAI.screens.judgement.runBlock({
             trials: trials,
             showFeedback: true,
-            question: 'Is this a real photograph or AI-generated?',
+            question: 'Is this image real or AI-generated?',
+            phaseLabel: 'Phase 2 – you will now receive feedback',
+            explanation: 'Training: 20 images, feedback after each.',
             step: 'Training ' + (blockIndex + 1) + '/' + ratios.length,
             progressBase: span.base + perBlock * blockIndex,
             progressSpan: perBlock
           });
         }).then(function () {
           var stats = RAI.store.summarise(function (t) {
-            return t.phase === 'priming' && t.block === blockIndex;
+            return t.phase === 'priming' && t.block === blockIndex && !t.isAttentionCheck;
           });
           RAI.store.logEvent('priming_block_end', {
             block: blockIndex, ratio: ratio, accuracy: stats.accuracy

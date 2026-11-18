@@ -7,14 +7,6 @@
 
   /**
    * @param {object} opts
-   * @param {string} opts.eyebrow
-   * @param {string} opts.title
-   * @param {string} opts.body        raw HTML
-   * @param {string} [opts.cta]       button label
-   * @param {number} [opts.progress]
-   * @param {string} [opts.step]      progress label
-   * @param {string} [opts.footer]
-   * @param {boolean} [opts.showKeys] show the arrow-key legend
    */
   function make(opts) {
     return {
@@ -26,8 +18,7 @@
         var keyLegend = opts.showKeys
           ? '<div class="notice" style="margin-top:1.25rem">' +
               '<strong>Tip:</strong> you can answer with the keyboard &mdash; ' +
-              '<span class="kbd">&larr;</span> for <strong>AI-generated</strong>, ' +
-              '<span class="kbd">&rarr;</span> for <strong>Real photo</strong>. ' +
+              'keys <span class="kbd">1</span>\u2013<span class="kbd">4</span>. ' +
               'Clicking or tapping the buttons works too.' +
             '</div>'
           : '';

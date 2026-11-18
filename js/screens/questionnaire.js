@@ -63,22 +63,6 @@
                 '</div>' +
               '</fieldset>' +
 
-              '<div class="field field--wide">' +
-                '<label for="strategy">What did you look for when deciding? Any particular giveaways?</label>' +
-                '<textarea id="strategy" name="strategy" placeholder="e.g. hands, text, lighting, textures\u2026"></textarea>' +
-              '</div>' +
-
-              '<div class="field field--wide">' +
-                '<label for="guessPurpose">What do you think this study was trying to find out?</label>' +
-                '<textarea id="guessPurpose" name="guessPurpose" placeholder="Your honest guess."></textarea>' +
-                '<span class="field__hint">If you have no idea, saying so is a perfectly good answer.</span>' +
-              '</div>' +
-
-              '<div class="field field--wide">' +
-                '<label for="comments">Anything else we should know? (technical problems, distractions, etc.)</label>' +
-                '<textarea id="comments" name="comments"></textarea>' +
-              '</div>' +
-
               '<fieldset class="field--wide">' +
                 '<legend>Were you distracted or interrupted during the image blocks?</legend>' +
                 '<div class="choices">' +

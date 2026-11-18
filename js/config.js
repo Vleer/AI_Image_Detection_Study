@@ -11,7 +11,7 @@
     // While true the site renders generated placeholder images so the whole
     // flow is testable without any photo assets. Set to false once the real
     // photos are dropped into Photos/ (see js/stimuli.js).
-    useDummyStimuli: true,
+    useDummyStimuli: false,
 
     // How many buckets the placeholder set pretends to have. The real set is
     // 100 buckets (one real photo + its ChatGPT and Gemini counterparts).
@@ -26,6 +26,12 @@
 
     aiSources: ['chatgpt', 'gemini'],
 
+    // One attention-check image per phase (same file for every participant).
+    attentionChecks: [
+      'Photos/attention/attention-01.png',
+      'Photos/attention/attention-02.png',
+      'Photos/attention/attention-03.png'
+    ],
     // A bucket holds three versions of the same scene. Showing a participant
     // two versions of one scene would leak the answer, so each bucket is used
     // at most once for the entire session.
@@ -36,7 +42,7 @@
     trials: {
       baseline: 20,      // P3
       primingBlock: 20,  // P4, per ratio block
-      posttest: 20       // P5
+      posttest: 40       // P5
     },
 
     /* ----------------------------------------------------------- priming */
@@ -45,7 +51,7 @@
     // 'within'  -> each participant runs all three blocks in random order.
     primingDesign: 'between',
 
-    primingRatios: [0.25, 0.50, 0.75],
+    primingRatios: [0.20, 0.50, 0.80],
 
     // Force a condition for piloting, e.g. ?ratio=0.75 in the URL. null = random.
     forcedPrimingRatio: null,

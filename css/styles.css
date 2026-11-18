@@ -437,6 +437,8 @@ legend { font-weight: 600; font-size: .9rem; padding-inline: .35rem; }
 }
 
 .trial__question { font-weight: 650; font-size: var(--step-1); }
+.trial__phase { font-weight: 700; font-size: var(--step-0); color: var(--accent); }
+.trial__explanation { font-size: .9rem; margin-top: .15rem; }
 
 .trial__counter {
   color: var(--text-faint);
@@ -446,6 +448,8 @@ legend { font-weight: 600; font-size: .9rem; padding-inline: .35rem; }
 
 .trial__stage {
   min-height: 0;
+  height: 55vh;
+  max-height: 60vh;
   display: grid;
   place-items: center;
   background: var(--bg-elev);
@@ -457,7 +461,7 @@ legend { font-weight: 600; font-size: .9rem; padding-inline: .35rem; }
 
 .trial__img {
   max-width: 100%;
-  max-height: 100%;
+  max-height: 55vh;
   width: auto;
   height: auto;
   object-fit: contain;
@@ -471,9 +475,30 @@ legend { font-weight: 600; font-size: .9rem; padding-inline: .35rem; }
 
 .trial__foot { display: grid; gap: .75rem; justify-items: center; }
 
+.trial__result {
+  width: 100%;
+  max-width: 44rem;
+  margin-inline: auto;
+  text-align: center;
+  padding: .75rem 1rem;
+  border-radius: var(--radius);
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+}
+
+.trial__result.hidden { display: none; }
+
+.trial__result-text {
+  font-size: var(--step-1);
+  font-weight: 700;
+}
+
+.trial__result-text--correct { color: var(--success); }
+.trial__result-text--wrong { color: var(--danger); }
+
 .answers {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: clamp(.6rem, 2vw, 1.25rem);
   width: 100%;
   max-width: 44rem;
@@ -517,6 +542,18 @@ legend { font-weight: 600; font-size: .9rem; padding-inline: .35rem; }
   border-color: var(--real);
   background: color-mix(in srgb, var(--real) 14%, var(--bg-elev));
 }
+
+.answer.is-correct {
+  border-color: var(--success);
+  background: color-mix(in srgb, var(--success) 20%, var(--bg-elev));
+}
+
+.answer.is-wrong {
+  border-color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 20%, var(--bg-elev));
+}
+
+.answer.is-correct, .answer.is-wrong { opacity: 1; }
 
 .kbd {
   display: inline-grid;

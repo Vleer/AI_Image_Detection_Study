@@ -96,7 +96,7 @@
   function start(fresh) {
     var existing = fresh ? null : load();
     session = existing || createSession();
-    save();
+    // Persist only on final submit: do not write incomplete sessions to storage.
     return session;
   }
 
@@ -110,25 +110,48 @@
       node = node[parts[i]];
     }
     node[parts[parts.length - 1]] = value;
-    save();
+    /* no intermediate persistence */
   }
 
   function logTrial(record) {
     record.t = nowIso();
     session.trials.push(record);
-    save();
     return record;
   }
 
   function logEvent(name, detail) {
     session.events.push({ t: nowIso(), name: name, detail: detail || null });
-    save();
   }
 
   function finish() {
-    session.completedAt = nowIso();
+    var already = !!session.completedAt;
+    if (!already) session.completedAt = nowIso();
+    // Balanced randomization bookkeeping: count completed participants per condition (once).
+    try {
+      if (!already && session.condition && session.condition.primingRatios && session.condition.primingRatios.length) {
+        incrementConditionCount(session.condition.primingRatios[0]);
+      }
+    } catch (e) {}
     save();
     return upload();
+  }
+
+  /* ------------------------------------------------ condition counts */
+  var CONDITION_COUNTS_KEY = null;
+  function conditionCountsKey() {
+    return (RAI.config.storageKey || 'rai.session.v1') + '.conditionCounts';
+  }
+  function getConditionCounts() {
+    try { return JSON.parse(global.localStorage.getItem(conditionCountsKey()) || '{}') || {}; }
+    catch (e) { return {}; }
+  }
+  function incrementConditionCount(ratio) {
+    try {
+      var counts = getConditionCounts();
+      var k = String(ratio);
+      counts[k] = (counts[k] || 0) + 1;
+      global.localStorage.setItem(conditionCountsKey(), JSON.stringify(counts));
+    } catch (e) {}
   }
 
   function upload() {
@@ -181,8 +204,8 @@
   var CSV_COLUMNS = [
     'participantId', 'seed', 'design', 'assignedRatios',
     'phase', 'block', 'blockRatio', 'index',
-    'bucketId', 'category', 'variant', 'isAI',
-    'response', 'correct', 'rtMs', 'inputMethod', 'feedbackShown', 't'
+    'bucketId', 'category', 'variant', 'isAI', 'isAttentionCheck', 'attentionPassed',
+    'rating', 'response', 'correct', 'rtMs', 'inputMethod', 'feedbackShown', 't'
   ];
 
   function csvEscape(v) {
@@ -255,6 +278,8 @@
     toCsv: toCsv,
     exportJson: exportJson,
     exportCsv: exportCsv,
-    exportAll: exportAll
+    exportAll: exportAll,
+    getConditionCounts: getConditionCounts,
+    incrementConditionCount: incrementConditionCount
   };
 })(window);
