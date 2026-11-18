@@ -198,6 +198,9 @@
             '<div class="btn-row" style="justify-content:center;margin-top:.75rem">' +
               '<button class="btn btn--primary" id="continueFeedback">Continue</button>' +
             '</div>';
+          // Make the result panel scroll into view so the Continue button is
+          // never hidden behind the image on short viewports.
+          result.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         }
         var cont = ui.$('#continueFeedback');
         var offFb = null;
