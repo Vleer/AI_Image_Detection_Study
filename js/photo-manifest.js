@@ -20,10 +20,10 @@
   var RAI = global.RAI = global.RAI || {};
 
   var counts = {
-    faces: 0,
-    landscape: 0,
-    interior: 0,
-    object: 0
+    faces: 25,
+    landscape: 25,
+    interior: 25,
+    object: 25
   };
 
   var ext = 'jpg';
