@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Image Perception Study</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>&#128065;</text></svg>">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#screen">Skip to content</a>
+
+<div id="app" class="app">
+  <header class="topbar" id="topbar" hidden>
+    <div class="topbar__brand">Image Perception Study</div>
+    <div class="topbar__progress">
+      <div class="progressbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Study progress">
+        <div class="progressbar__fill" id="progressFill"></div>
+      </div>
+      <span class="topbar__step" id="progressLabel"></span>
+    </div>
+  </header>
+
+  <main id="screen" class="screen" tabindex="-1"></main>
+
+  <footer class="footer" id="footer">
+    <span id="footerNote">Participant session &middot; data stored locally in your browser</span>
+  </footer>
+</div>
+
+<!-- Full-screen correctness feedback for the training phase -->
+<div id="feedback" class="feedback" aria-live="assertive" aria-atomic="true" hidden>
+  <div class="feedback__inner">
+    <div class="feedback__icon" id="feedbackIcon"></div>
+    <div class="feedback__title" id="feedbackTitle"></div>
+    <div class="feedback__sub" id="feedbackSub"></div>
+  </div>
+</div>
+
+<!-- Load order matters: these are plain scripts, no bundler required. -->
+<script src="js/rng.js"></script>
+<script src="js/config.js"></script>
+<script src="js/dummy-images.js"></script>
+<script src="js/photo-manifest.js"></script>
+<script src="js/stimuli.js"></script>
+<script src="js/store.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/screens/welcome.js"></script>
+<script src="js/screens/demographics.js"></script>
+<script src="js/screens/instructions.js"></script>
+<script src="js/screens/judgement.js"></script>
+<script src="js/screens/priming.js"></script>
+<script src="js/screens/questionnaire.js"></script>
+<script src="js/screens/debrief.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
