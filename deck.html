@@ -6,32 +6,19 @@
   <title>Real or AI? - Study Walkthrough</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
-    :root {
-      --bg: #0f1115;
-      --bg-elev: #171a21;
-      --bg-elev-2: #1f2530;
-      --line: #2a3140;
-      --text: #eef1f6;
-      --text-dim: #a3adbf;
-      --text-faint: #6f7a8d;
-      --accent: #6ea8fe;
-      --radius: 14px;
-    }
+    :root { --bg: #0f1115; --bg-elev: #171a21; --bg-elev-2: #1f2530; --line: #2a3140; --text: #eef1f6; --text-dim: #a3adbf; --text-faint: #6f7a8d; --accent: #6ea8fe; --radius: 14px; }
     html, body { margin: 0; padding: 0; min-height: 100vh; height: 100dvh; background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; display: flex; align-items: center; justify-content: center; overflow: hidden; }
     .deck-container { width: 100%; max-width: 1000px; padding: 2rem; box-sizing: border-box; }
     .slide { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity 1s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow-y: auto; }
     .slide.active { opacity: 1; pointer-events: auto; position: relative; }
     .slide-content { max-width: 900px; text-align: center; padding: 2rem 1rem; }
-    .slide-header { font-size: clamp(2rem, 3vw + 1rem, 3rem); font-weight: 600; margin-bottom: 1rem; color: var(--accent); }
-    .slide-subtitle { font-size: clamp(1rem, 2vw, 1.4rem); color: var(--text-dim); margin-bottom: 2rem; line-height: 1.6; }
-    .slide-body { font-size: clamp(1rem, 1.5vw, 1.25rem); line-height: 1.7; color: var(--text-dim); max-width: 700px; margin: 0 auto 2rem; }
+    .slide-header { font-size: clamp(1.4rem, 2vw + .6rem, 2rem); font-weight: 600; margin-bottom: .5rem; color: var(--accent); }
+    .slide-subtitle { font-size: clamp(.85rem, 1.3vw, 1.05rem); color: var(--text-dim); margin-bottom: .8rem; line-height: 1.4; }
+    .slide-body { font-size: clamp(.85rem, 1.1vw, 1rem); line-height: 1.5; color: var(--text-dim); max-width: 760px; margin: 0 auto .8rem; }
     .slide-image-box { width: 92%; max-width: 960px; max-height: 72vh; box-shadow: 0 24px 70px rgba(0,0,0,.6); border-radius: var(--radius); overflow: hidden; margin: .5rem auto 1rem; background: var(--bg-elev); border: 1px solid var(--line); }
     .slide-image-box img { width: 100%; height: auto; display: block; }
     .slide-caption { font-size: .7rem; color: var(--text-faint); margin-bottom: .6rem; }
     .slide-footer { font-size: .65rem; color: var(--text-faint); margin-bottom: .5rem; }
-    .slide-subtitle { font-size: clamp(.85rem, 1.3vw, 1.05rem); color: var(--text-dim); margin-bottom: .8rem; line-height: 1.4; }
-    .slide-header { font-size: clamp(1.4rem, 2vw + .6rem, 2rem); font-weight: 600; margin-bottom: .5rem; color: var(--accent); }
-    .slide-body { font-size: clamp(.85rem, 1.1vw, 1rem); line-height: 1.5; color: var(--text-dim); max-width: 760px; margin: 0 auto .8rem; }
     .nav { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; gap: 1rem; z-index: 10; opacity: 0; transition: opacity .6s ease; pointer-events: none; }
     .nav.show { opacity: 1; pointer-events: auto; }
     .nav button { padding: .7rem 1.4rem; border-radius: 99px; border: 1px solid var(--line); background: var(--bg-elev-2); color: var(--text); font-size: 1rem; font-weight: 600; cursor: pointer; }
@@ -42,138 +29,113 @@
     .cover-sub { font-size: clamp(1rem, 2vw, 1.25rem); color: var(--text-dim); max-width: 700px; text-align: center; margin-bottom: 2rem; line-height: 1.7; }
     .cover-cta { padding: 1rem 2rem; border-radius: var(--radius); border: 1px solid var(--line); background: var(--bg-elev-2); color: var(--text); font-size: 1.1rem; font-weight: 600; cursor: pointer; }
     .cover-cta:hover { background: var(--accent); color: #05070c; }
-    .mockup { background: var(--bg-elev); border: 1px solid var(--line); border-radius: var(--radius); padding: 2rem; max-width: 700px; margin: 1rem auto; text-align: left; }
-    .mockup h3 { color: var(--accent); margin-bottom: .5rem; }
-    .mockup p { color: var(--text-dim); font-size: 1rem; line-height: 1.6; }
     @media (max-width: 48rem) { .deck-container { padding: 1rem; } .slide-image-box { max-height: 40vh; } }
   </style>
 </head>
 <body class="is-cover">
   <div class="deck-container">
-
     <div class="slide active" id="slide-1">
       <div class="slide-content">
         <div class="cover-logo">🖼️</div>
         <div class="cover-title">Real or AI?</div>
-        <div class="cover-sub">
-          <strong>AI Image Perception Study — Slide Deck</strong><br>
-          A 10-slide walkthrough of every study screen, including the Phase 2
-          result + feedback moment.<br>
-          Prepared for upload to your drive.
-        </div>
+        <div class="cover-sub"><strong>AI Image Perception Study — Slide Deck</strong><br>A 10-slide walkthrough of every study screen, including the Phase 2 result + feedback moment.</div>
         <button class="cover-cta" id="startDeck">View deck</button>
         <div class="slide-footer" style="margin-top:2rem">• 10 slides • <em>all screens + Phase 2 result & feedback</em></div>
       </div>
     </div>
-
     <div class="slide" id="slide-2">
       <div class="slide-content">
         <div class="slide-header">Welcome Screen</div>
         <div class="slide-subtitle">Participants first land here.</div>
-        <div class="slide-body">The welcome screen introduces the study as “a short study about how people judge digital images.” No mention of AI priming — participants are told only what they need to know to take part.</div>
+        <div class="slide-body">The welcome screen introduces the study as “a short study about how people judge digital images.” No mention of AI priming.</div>
         <div class="slide-image-box"><img src="deck-shots/01-welcome.png" alt="Welcome screen"></div>
         <div class="slide-caption">Figure 1 — Welcome screen (“Real or AI?”)</div>
         <div class="slide-footer">Slide 2 of 10 — Screen: Welcome</div>
       </div>
     </div>
-
     <div class="slide" id="slide-3">
       <div class="slide-content">
         <div class="slide-header">Informed Consent Screen</div>
         <div class="slide-subtitle">Two required checkboxes; Continue stays disabled until both are ticked.</div>
-        <div class="slide-body">Before any data is collected, participants confirm they are 18+ and that they agree to participate. Placeholder text reserves space for the full IRB Appendix B consent language.</div>
+        <div class="slide-body">Before any data is collected, participants confirm they are 18+ and agree to participate.</div>
         <div class="slide-image-box"><img src="deck-shots/02-consent.png" alt="Consent screen"></div>
         <div class="slide-caption">Figure 2 — Informed consent screen</div>
         <div class="slide-footer">Slide 3 of 10 — Screen: Consent</div>
       </div>
     </div>
-
     <div class="slide" id="slide-4">
       <div class="slide-content">
         <div class="slide-header">Demographics Screen</div>
         <div class="slide-subtitle">Six required questions, all radio buttons except age.</div>
-        <div class="slide-body">Age (whole number 18–99), gender, education, AI-image exposure frequency, AI-image creation frequency, and confidence telling AI images from photographs. No free-text fields — answers cannot personally identify anyone.</div>
+        <div class="slide-body">Age (18–99), gender, education, AI-image exposure, AI-image creation, and confidence. No free-text fields.</div>
         <div class="slide-image-box"><img src="deck-shots/03-demographics.png" alt="Demographics screen"></div>
         <div class="slide-caption">Figure 3 — Demographics screen</div>
         <div class="slide-footer">Slide 4 of 10 — Screen: Demographics</div>
       </div>
     </div>
-
     <div class="slide" id="slide-5">
       <div class="slide-content">
         <div class="slide-header">Phase 1 — Baseline</div>
         <div class="slide-subtitle">“Phase 1” — no feedback given.</div>
-        <div class="slide-body">Participants judge 20 images on the 4-point scale (Definitely real → Definitely AI). They are told they will <em>not</em> find out whether they were right — this establishes their unprimed baseline accuracy.</div>
+        <div class="slide-body">Participants judge 20 images on the 4-point scale. They are told they will not find out whether they were right.</div>
         <div class="slide-image-box"><img src="deck-shots/05-phase1-trial.png" alt="Phase 1 trial"></div>
         <div class="slide-caption">Figure 4 — Phase 1 baseline trial</div>
-        <div class="slide-footer">Slide 5 of 10 — Screen: Phase 1 intro + trial</div>
+        <div class="slide-footer">Slide 5 of 10 — Screen: Phase 1</div>
       </div>
     </div>
-
     <div class="slide" id="slide-6">
       <div class="slide-content">
         <div class="slide-header">Phase 2 — Training</div>
         <div class="slide-subtitle">“Phase 2 – you will now receive feedback”</div>
-        <div class="slide-body">Participants are told the next set works the same way, “with one difference: after each answer you will be told straight away whether you were right or wrong.” This is the priming block (20 images, AI rate assigned per condition).</div>
+        <div class="slide-body">The priming block: 20 images, feedback after each answer. AI rate assigned per condition (20/50/80%).</div>
         <div class="slide-image-box"><img src="deck-shots/06-phase2-intro.png" alt="Phase 2 intro"></div>
         <div class="slide-caption">Figure 5 — Phase 2 intro screen</div>
         <div class="slide-footer">Slide 6 of 10 — Screen: Phase 2 introduction</div>
       </div>
     </div>
-
     <div class="slide" id="slide-7">
       <div class="slide-content">
         <div class="slide-header">Phase 2 Trial (judgment)</div>
         <div class="slide-subtitle">Same 4-point judgment, feedback follows each answer.</div>
-        <div class="slide-body">The participant sees an image and answers. No color flashing, no full-screen overlay — only neutral text appears on the result area below the image after they respond.</div>
+        <div class="slide-body">No color flashing — only neutral text appears on the result area below the image after responding.</div>
         <div class="slide-image-box"><img src="deck-shots/07-phase2-trial.png" alt="Phase 2 trial"></div>
-        <div class="slide-caption">Figure 6 — Phase 2 trial (feedback off until answer)</div>
+        <div class="slide-caption">Figure 6 — Phase 2 trial</div>
         <div class="slide-footer">Slide 7 of 10 — Screen: Phase 2 judgment trial</div>
       </div>
     </div>
-
     <div class="slide" id="slide-8">
       <div class="slide-content">
         <div class="slide-header">Phase 2 — Result + Feedback</div>
         <div class="slide-subtitle">The moment that primes the participant.</div>
-        <div class="slide-body">Straight after the answer, a neutral result panel appears: “This image was AI-generated.” or “This image was real.” A Continue button advances to the next image. Self-paced, no timer, no animation — the priming happens through the repeated feedback, not through dramatic color.</div>
+        <div class="slide-body">“This image was AI-generated.” or “This image was real.” Self-paced, no timer, no animation.</div>
         <div class="slide-image-box"><img src="deck-shots/08-phase2-feedback.png" alt="Phase 2 feedback"></div>
         <div class="slide-caption">Figure 7 — Phase 2 result + feedback screen</div>
         <div class="slide-footer">Slide 8 of 10 — Screen: Phase 2 result + feedback</div>
       </div>
     </div>
-
     <div class="slide" id="slide-9">
       <div class="slide-content">
         <div class="slide-header">Phase 3 — Post-Test</div>
         <div class="slide-subtitle">“Phase 3 – you will no longer receive feedback”</div>
-        <div class="slide-body">The final judgment block: 40 images, no feedback — identical in structure to Phase 1 so the only difference between pre- and post-test is what happened during Phase 2 training.</div>
-        <div class="mockup">
-          <h3>Phase 3 – you will no longer receive feedback</h3>
-          <p>Last block: 40 more images, same task. The feedback is switched off again, so you will not find out whether you were right. Keep answering on first impression.</p>
-        </div>
-        <div class="slide-caption">Figure 8 — Phase 3 introduction (app-styled card)</div>
+        <div class="slide-body">40 images, no feedback — identical structure to Phase 1. Only difference is what happened in Phase 2.</div>
         <div class="slide-footer">Slide 9 of 10 — Screen: Phase 3 introduction</div>
       </div>
     </div>
-
     <div class="slide" id="slide-10">
       <div class="slide-content">
         <div class="slide-header">Debrief Screen</div>
-        <div class="slide-subtitle">The full reveal.</div>
-        <div class="slide-body">At the end, participants learn the study’s real purpose: whether brief feedback training shifts how readily someone calls an image “AI” — and whether that makes them worse, not better. They see their own scores per block, a completion code, and options to download (JSON/CSV) or delete their data. Nothing leaves the browser unless they choose.</div>
+        <div class="slide-subtitle">The full reveal — entire page below.</div>
+        <div class="slide-body">Participants learn the study’s real purpose, see their scores, get a completion code, and can download or delete their data.</div>
         <div class="slide-image-box" style="max-height: 78vh; overflow-y: auto;"><img src="deck-shots/11-debrief.png" alt="Debrief screen"></div>
-        <div class="slide-caption">Figure 9 — Debrief screen (results, completion code, data export)</div>
+        <div class="slide-caption">Figure 8 — Debrief screen (full page, scrollable)</div>
         <div class="slide-footer">Slide 10 of 10 — Screen: Debrief</div>
       </div>
     </div>
-
     <div class="nav" id="nav">
       <button id="prevBtn" disabled>Prev</button>
       <button id="nextBtn">Next</button>
     </div>
   </div>
-
   <script>
     (function () {
       var slides = document.querySelectorAll('.slide');
