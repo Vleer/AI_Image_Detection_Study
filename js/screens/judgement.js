@@ -12,6 +12,7 @@
 
   function btn(rating, label) {
     return '<button class="answer" id="btn' + rating + '" type="button" data-rating="' + rating + '">' +
+      '<span class="answer__key"><span class="kbd">' + rating + '</span></span>' +
       '<span class="answer__label">' + label + '</span>' +
       '</button>';
   }
@@ -20,10 +21,12 @@
     return '' +
       '<div class="trial">' +
         '<div class="trial__head">' +
-          (opts.phaseLabel ? '<div class="trial__phase">' + RAI.ui.escapeHtml(opts.phaseLabel) + '</div>' : '') +
-          (opts.explanation ? '<div class="trial__explanation muted">' + RAI.ui.escapeHtml(opts.explanation) + '</div>' : '') +
+          '<div class="trial__meta">' +
+            (opts.phaseLabel ? '<span class="trial__phase">' + RAI.ui.escapeHtml(opts.phaseLabel) + '</span>' : '') +
+            '<span class="trial__counter" id="trialCounter"></span>' +
+          '</div>' +
           '<div class="trial__question">' + opts.question + '</div>' +
-          '<div class="trial__counter" id="trialCounter"></div>' +
+          (opts.explanation ? '<div class="trial__explanation muted">' + RAI.ui.escapeHtml(opts.explanation) + '</div>' : '') +
         '</div>' +
         '<div class="trial__stage">' +
           '<img class="trial__img" id="trialImg" alt="Image to judge" draggable="false">' +

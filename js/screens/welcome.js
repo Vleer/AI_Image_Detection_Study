@@ -15,11 +15,17 @@
 
       ui.render(
         '<div class="prose prose--narrow">' +
-          '<div class="card center">' +
+          '<div class="card center hero">' +
+            '<div class="hero__icon" aria-hidden="true">&#128065;</div>' +
             '<div class="eyebrow">Research study</div>' +
             '<h1>Real or AI?</h1>' +
             '<p class="lead">A short study about how people judge digital images.</p>' +
-            '<div class="btn-row" style="justify-content:center">' +
+            '<ul class="factlist factlist--inline">' +
+              '<li><span class="bullet" aria-hidden="true">&#9201;</span><span>About 10 minutes</span></li>' +
+              '<li><span class="bullet" aria-hidden="true">&#128274;</span><span>No sign-up, fully anonymous</span></li>' +
+              '<li><span class="bullet" aria-hidden="true">&#128260;</span><span>You can stop at any time</span></li>' +
+            '</ul>' +
+            '<div class="btn-row btn-row--center">' +
               '<button class="btn btn--primary btn--lg" id="continue">Continue</button>' +
             '</div>' +
           '</div>' +

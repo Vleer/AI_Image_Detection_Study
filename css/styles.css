@@ -5,6 +5,7 @@
    ========================================================================== */
 
 :root {
+  /* Dark palette (default). */
   --bg: #0f1115;
   --bg-elev: #171a21;
   --bg-elev-2: #1f2530;
@@ -19,21 +20,51 @@
   --danger: #ff5d6c;
   --success: #22c98a;
 
+  /* Foreground for accent-filled controls (primary buttons, checkboxes). */
+  --on-accent: #05070c;
+
   --radius: 14px;
   --radius-sm: 9px;
   --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, .25);
   --maxw: 62rem;
+
+  /* The stimulus stage keeps a fixed neutral surround in both themes: the
+     luminance around an image affects how it is judged, so the picture area
+     itself must not change with the UI theme. */
+  --stage: #101318;
+  --stage-line: #262c38;
 
   --step-0: clamp(.95rem, .9rem + .25vw, 1.05rem);
   --step-1: clamp(1.1rem, 1rem + .5vw, 1.3rem);
   --step-2: clamp(1.4rem, 1.2rem + 1vw, 1.9rem);
   --step-3: clamp(1.8rem, 1.4rem + 2vw, 2.6rem);
+
+  color-scheme: dark;
 }
 
-/* The palette is deliberately fixed rather than following the OS light/dark
-   setting: the luminance surrounding a stimulus affects how it is judged, and
-   every participant needs to see the same one. */
-:root { color-scheme: dark; }
+/* Light theme: applied via <html data-theme="light"> by an inline script in
+   <head> before first paint (explicit choice wins, else the OS setting). */
+:root[data-theme="light"] {
+  --bg: #f3f5f9;
+  --bg-elev: #ffffff;
+  --bg-elev-2: #eef1f6;
+  --line: #d9dfe9;
+  --text: #141922;
+  --text-dim: #4e5868;
+  --text-faint: #6f7a8c;
+  --accent: #2f6fe0;
+  --accent-strong: #255fd0;
+  --ai: #7c4dea;
+  --real: #0f9e6b;
+  --danger: #d42a3f;
+  --success: #0f9e6b;
+  --on-accent: #ffffff;
+  --shadow: 0 10px 30px rgba(23, 34, 58, .10);
+  --shadow-sm: 0 2px 8px rgba(23, 34, 58, .08);
+
+  color-scheme: light;
+}
 
 * { box-sizing: border-box; }
 
@@ -51,6 +82,21 @@ body {
   text-rendering: optimizeLegibility;
   overscroll-behavior: none;
 }
+
+/* A soft glow behind the content so the page does not read as a flat slab.
+   It sits behind everything and never touches the stimulus stage. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(60rem 34rem at 12% -8%, color-mix(in srgb, var(--accent) 13%, transparent), transparent 62%),
+    radial-gradient(52rem 30rem at 92% 108%, color-mix(in srgb, var(--ai) 10%, transparent), transparent 60%);
+}
+
+#app { position: relative; z-index: 1; }
 
 body.is-task { overflow: hidden; }
 
@@ -97,10 +143,11 @@ body.is-task .app {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: .7rem clamp(1rem, 4vw, 2rem);
+  padding: .6rem clamp(1rem, 4vw, 2rem);
   border-bottom: 1px solid var(--line);
-  background: color-mix(in srgb, var(--bg-elev) 80%, transparent);
-  backdrop-filter: blur(8px);
+  background: color-mix(in srgb, var(--bg-elev) 82%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   position: sticky;
   top: 0;
   z-index: 5;
@@ -110,11 +157,16 @@ body.is-task .app {
 .topbar[hidden] { display: none; }
 
 .topbar__brand {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
   font-weight: 650;
   font-size: .95rem;
   letter-spacing: -.01em;
   white-space: nowrap;
 }
+
+.topbar__logo { font-size: 1.05rem; line-height: 1; }
 
 .topbar__progress {
   margin-left: auto;
@@ -125,6 +177,10 @@ body.is-task .app {
   flex: 1;
   justify-content: flex-end;
 }
+.topbar__progress[hidden] { display: none; }
+
+/* Before any progress exists the toggle takes the free space on the right. */
+.topbar__progress[hidden] + .theme-toggle { margin-left: auto; }
 
 .progressbar {
   flex: 1;
@@ -141,6 +197,7 @@ body.is-task .app {
   background: linear-gradient(90deg, var(--accent), var(--ai));
   border-radius: 99px;
   transition: width .35s ease;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 55%, transparent);
 }
 
 .topbar__step {
@@ -150,12 +207,64 @@ body.is-task .app {
   white-space: nowrap;
 }
 
+/* ------------------------------------------------------------ theme toggle */
+
+.theme-toggle {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: var(--bg-elev-2);
+  color: var(--text-dim);
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 99px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  flex: none;
+  transition: transform .2s ease, background .15s ease, color .15s ease, border-color .15s ease;
+}
+
+.theme-toggle:hover {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--line));
+  transform: rotate(18deg);
+}
+.theme-toggle:active { transform: rotate(0) scale(.92); }
+
+/* Show the icon of the theme you would switch to. */
+.theme-toggle__icon { display: none; grid-area: 1 / 1; }
+:root[data-theme="dark"]  .theme-toggle__icon--sun  { display: block; }
+:root[data-theme="light"] .theme-toggle__icon--moon { display: block; }
+
+/* On narrow screens the brand truncates and the progress group is allowed to
+   shrink so the topbar (and the toggle at its end) never overflows. */
+@media (max-width: 40rem) {
+  .topbar { gap: .6rem; padding-inline: .85rem; }
+  .topbar__brand span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+  .topbar__progress { min-width: 0; }
+}
+
 .screen {
   width: 100%;
   padding: clamp(1.25rem, 4vw, 2.5rem) clamp(1rem, 4vw, 2rem);
   display: flex;
   flex-direction: column;
   outline: none;
+}
+
+/* Each screen fades up gently when it replaces the previous one. Task
+   screens are excluded: they re-render on every trial and must stay instant. */
+.screen:not(.screen--task) > * {
+  animation: screenIn .32s cubic-bezier(.2, .7, .3, 1) both;
+}
+
+@keyframes screenIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
 }
 
 .screen--task {
@@ -182,6 +291,92 @@ body.is-task .app {
 }
 
 .prose--narrow { max-width: 44rem; }
+.prose--consent { max-width: 48rem; }
+
+/* --------------------------------------------------------------- consent */
+
+.consent-text {
+  max-height: 40vh;
+  overflow: auto;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--bg-elev-2) 60%, transparent);
+  color: var(--text-dim);
+  font-size: .92rem;
+  line-height: 1.65;
+}
+
+.consent-form {
+  display: grid;
+  gap: .75rem;
+  margin-top: 1.5rem;
+}
+
+/* Square custom checkbox: clearer than the pill choices used elsewhere,
+   and matches the "tick to confirm" mental model. */
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: .7rem;
+  padding: .8rem .9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--bg-elev-2) 55%, transparent);
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease;
+}
+
+.check:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+
+.check input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.check__box {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: .12rem;
+  border: 2px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg-elev);
+  display: grid;
+  place-items: center;
+  transition: background .15s ease, border-color .15s ease;
+}
+
+.check__box::after {
+  content: '';
+  width: .55rem;
+  height: .3rem;
+  border-left: 2.5px solid var(--on-accent);
+  border-bottom: 2.5px solid var(--on-accent);
+  transform: rotate(-45deg) translateY(-1px) scale(0);
+  transition: transform .15s cubic-bezier(.2, 1.4, .4, 1);
+}
+
+.check input:checked + .check__box {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+}
+
+.check input:checked + .check__box::after { transform: rotate(-45deg) translateY(-1px) scale(1); }
+
+.check:has(input:checked) {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+}
+
+.check input:focus-visible + .check__box {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.check__label { color: var(--text-dim); font-size: .93rem; line-height: 1.5; }
 
 /* ------------------------------------------------------------------ card */
 
@@ -191,9 +386,22 @@ body.is-task .app {
   border-radius: var(--radius);
   padding: clamp(1.25rem, 3vw, 2rem);
   box-shadow: var(--shadow);
+  position: relative;
 }
 
 .card + .card { margin-top: 1rem; }
+
+/* A hairline highlight along the top edge gives the card a little depth
+   without changing any spacing. */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 45%, transparent) 30%, color-mix(in srgb, var(--ai) 35%, transparent) 70%, transparent);
+  pointer-events: none;
+}
 
 .eyebrow {
   text-transform: uppercase;
@@ -214,7 +422,7 @@ body.is-task .app {
 
 .notice {
   border-left: 3px solid var(--accent);
-  background: var(--bg-elev-2);
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg-elev-2));
   padding: .85rem 1rem;
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   color: var(--text-dim);
@@ -262,24 +470,32 @@ body.is-task .app {
   padding: .8rem 1.4rem;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: transform .08s ease, background .15s ease, border-color .15s ease, opacity .15s ease;
+  box-shadow: var(--shadow-sm);
+  transition: transform .12s ease, background .15s ease, border-color .15s ease, opacity .15s ease, box-shadow .15s ease;
   touch-action: manipulation;
 }
 
-.btn:hover:not(:disabled) { border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
-.btn:active:not(:disabled) { transform: translateY(1px); }
-.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--line));
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .18);
+}
+.btn:active:not(:disabled) { transform: translateY(1px); box-shadow: none; }
+.btn:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
 
 .btn--primary {
-  background: var(--accent-strong);
+  background: linear-gradient(180deg, var(--accent), var(--accent-strong));
   border-color: var(--accent-strong);
-  color: #05070c;
+  color: var(--on-accent);
 }
-.btn--primary:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); }
+.btn--primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 88%, #fff), var(--accent));
+  border-color: var(--accent);
+}
 
-.btn--ghost { background: transparent; }
+.btn--ghost { background: transparent; box-shadow: none; }
 
-.btn--lg { padding: 1rem 1.9rem; font-size: var(--step-1); }
+.btn--lg { padding: 1rem 1.9rem; font-size: var(--step-1); border-radius: calc(var(--radius-sm) + 3px); }
 
 .btn-row {
   display: flex;
@@ -290,6 +506,35 @@ body.is-task .app {
 }
 
 .btn-row--end { justify-content: flex-end; }
+.btn-row--center { justify-content: center; }
+
+/* ------------------------------------------------------------------- hero */
+
+.hero { padding-block: clamp(2rem, 6vw, 3.25rem); }
+
+.hero__icon {
+  font-size: clamp(2.75rem, 9vw, 4rem);
+  line-height: 1;
+  margin-bottom: .75rem;
+  display: inline-block;
+  animation: float 3.5s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+
+.factlist--inline {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .5rem 1.5rem;
+  margin: 1.5rem 0 .5rem;
+  font-size: .9rem;
+}
+
+.factlist--inline li { justify-content: center; }
 
 :where(button, a, input, select, textarea):focus-visible {
   outline: 2px solid var(--accent);
@@ -323,6 +568,17 @@ input[type="text"], input[type="number"], select, textarea {
   padding: .65rem .75rem;
   width: 100%;
   min-width: 0;
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+input[type="text"]:hover, input[type="number"]:hover, select:hover, textarea:hover {
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+}
+
+input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 24%, transparent);
 }
 
 textarea { resize: vertical; min-height: 5.5rem; }
@@ -333,7 +589,11 @@ fieldset {
   padding: .9rem 1rem 1rem;
   margin: 0;
   min-width: 0;
+  background: color-mix(in srgb, var(--bg-elev-2) 55%, transparent);
+  transition: border-color .15s ease;
 }
+
+fieldset:focus-within { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
 
 legend { font-weight: 600; font-size: .9rem; padding-inline: .35rem; }
 
@@ -359,13 +619,19 @@ legend { font-weight: 600; font-size: .9rem; padding-inline: .35rem; }
   padding: .45rem .9rem;
   font-size: .88rem;
   cursor: pointer;
-  transition: background .15s ease, border-color .15s ease, color .15s ease;
+  transition: background .15s ease, border-color .15s ease, color .15s ease, transform .12s ease, box-shadow .15s ease;
+}
+
+.choice span:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  transform: translateY(-1px);
 }
 
 .choice input:checked + span {
   background: color-mix(in srgb, var(--accent) 22%, var(--bg-elev-2));
   border-color: var(--accent);
   color: var(--text);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
 .choice input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -392,11 +658,19 @@ legend { font-weight: 600; font-size: .9rem; padding-inline: .35rem; }
   font-size: .85rem;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, transform .12s ease, box-shadow .15s ease;
+}
+
+.likert__opt span:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  transform: translateY(-1px);
 }
 
 .likert__opt input:checked + span {
   background: color-mix(in srgb, var(--accent) 25%, var(--bg-elev-2));
   border-color: var(--accent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent);
+  font-weight: 700;
 }
 
 .likert__opt input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -429,21 +703,48 @@ legend { font-weight: 600; font-size: .9rem; padding-inline: .35rem; }
 }
 
 .trial__head {
+  display: grid;
+  gap: .2rem;
+}
+
+.trial__meta {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: .5rem 1rem;
   flex-wrap: wrap;
 }
 
-.trial__question { font-weight: 650; font-size: var(--step-1); }
-.trial__phase { font-weight: 700; font-size: var(--step-0); color: var(--accent); }
-.trial__explanation { font-size: .9rem; margin-top: .15rem; }
+.trial__question {
+  font-weight: 650;
+  font-size: var(--step-1);
+  text-align: center;
+}
+
+.trial__phase {
+  font-weight: 700;
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  border-radius: 99px;
+  padding: .15rem .7rem;
+  white-space: nowrap;
+}
+
+.trial__explanation {
+  font-size: .85rem;
+  text-align: center;
+  color: var(--text-faint);
+}
 
 .trial__counter {
   color: var(--text-faint);
   font-size: .85rem;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .trial__stage {
@@ -452,11 +753,12 @@ legend { font-weight: 600; font-size: .9rem; padding-inline: .35rem; }
   max-height: 50vh;
   display: grid;
   place-items: center;
-  background: var(--bg-elev);
-  border: 1px solid var(--line);
+  background: var(--stage);
+  border: 1px solid var(--stage-line);
   border-radius: var(--radius);
   overflow: hidden;
   position: relative;
+  box-shadow: inset 0 2px 14px rgba(0, 0, 0, .45);
 }
 
 .trial__img {
@@ -484,6 +786,8 @@ legend { font-weight: 600; font-size: .9rem; padding-inline: .35rem; }
   border-radius: var(--radius);
   background: var(--bg-elev);
   border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+  animation: screenIn .25s cubic-bezier(.2, .7, .3, 1) both;
 }
 
 .trial__result.hidden { display: none; }
@@ -504,6 +808,15 @@ legend { font-weight: 600; font-size: .9rem; padding-inline: .35rem; }
   max-width: 44rem;
 }
 
+/* Below ~576px the four labels ("Definitely real") cannot fit side by side
+   without forcing the whole trial grid wider than the viewport, so the answers
+   fall back to a 2×2 pad. The stage shrinks to keep everything on screen. */
+@media (max-width: 36rem) {
+  .answers { grid-template-columns: repeat(2, 1fr); }
+  .trial__stage { height: 40vh; }
+  .trial__img { max-height: 40vh; }
+}
+
 .answer {
   appearance: none;
   cursor: pointer;
@@ -516,7 +829,8 @@ legend { font-weight: 600; font-size: .9rem; padding-inline: .35rem; }
   display: grid;
   gap: .2rem;
   place-items: center;
-  transition: transform .08s ease, border-color .15s ease, background .15s ease;
+  box-shadow: var(--shadow-sm);
+  transition: transform .12s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
   touch-action: manipulation;
 }
 
@@ -669,6 +983,16 @@ legend { font-weight: 600; font-size: .9rem; padding-inline: .35rem; }
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   padding: .9rem 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--ai));
 }
 
 .stat__value {
@@ -687,6 +1011,7 @@ legend { font-weight: 600; font-size: .9rem; padding-inline: .35rem; }
   border-radius: var(--radius-sm);
   padding: .15rem .45rem;
   font-size: .88em;
+  user-select: all;
 }
 
 /* --------------------------------------------------------------- utility */

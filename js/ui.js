@@ -31,9 +31,16 @@
   }
 
   function setProgress(fraction, label) {
+    // The topbar itself stays visible on every screen so the theme toggle is
+    // always reachable; only the progress group is shown once there is progress.
     var bar = ref('topbar');
-    if (fraction === null) { bar.hidden = true; return; }
     bar.hidden = false;
+    var progress = ref('topbarProgress');
+    if (fraction === null) {
+      if (progress) progress.hidden = true;
+      return;
+    }
+    if (progress) progress.hidden = false;
     var pct = Math.max(0, Math.min(1, fraction)) * 100;
     ref('progressFill').style.width = pct.toFixed(1) + '%';
     var wrap = $('.progressbar');
