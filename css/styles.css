@@ -166,8 +166,6 @@ body.is-task .app {
   white-space: nowrap;
 }
 
-.topbar__logo { font-size: 1.05rem; line-height: 1; }
-
 .topbar__progress {
   margin-left: auto;
   display: flex;
@@ -444,20 +442,6 @@ body.is-task .app {
   color: var(--text-dim);
 }
 
-.factlist .bullet {
-  flex: none;
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 50%;
-  background: var(--bg-elev-2);
-  color: var(--accent);
-  display: grid;
-  place-items: center;
-  font-size: .8rem;
-  font-weight: 700;
-  margin-top: .1rem;
-}
-
 /* --------------------------------------------------------------- buttons */
 
 .btn {
@@ -511,19 +495,6 @@ body.is-task .app {
 /* ------------------------------------------------------------------- hero */
 
 .hero { padding-block: clamp(2rem, 6vw, 3.25rem); }
-
-.hero__icon {
-  font-size: clamp(2.75rem, 9vw, 4rem);
-  line-height: 1;
-  margin-bottom: .75rem;
-  display: inline-block;
-  animation: float 3.5s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-7px); }
-}
 
 .factlist--inline {
   display: flex;
