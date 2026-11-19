@@ -6,6 +6,22 @@
 
   var RAI = global.RAI = global.RAI || {};
 
+  /* --------------------------------------------- condition counts (server) */
+  var serverCounts = null;
+
+  /** Fetches balanced-randomization counts from the backend if configured.
+      Caches in memory; on failure falls back to localStorage. */
+  function fetchConditionCounts() {
+    var url = RAI.config.conditionCountsEndpoint;
+    if (!url) return Promise.resolve();
+    return fetch(url, { method: 'GET' })
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (data) {
+        if (data && typeof data === 'object') serverCounts = data;
+      })
+      .catch(function () { /* offline or CORS: localStorage fallback */ });
+  }
+
   function nowIso() { return new Date().toISOString(); }
 
   function createSession() {
@@ -142,6 +158,7 @@
     return (RAI.config.storageKey || 'rai.session.v1') + '.conditionCounts';
   }
   function getConditionCounts() {
+    if (serverCounts) return serverCounts;
     try { return JSON.parse(global.localStorage.getItem(conditionCountsKey()) || '{}') || {}; }
     catch (e) { return {}; }
   }
@@ -152,6 +169,16 @@
       counts[k] = (counts[k] || 0) + 1;
       global.localStorage.setItem(conditionCountsKey(), JSON.stringify(counts));
     } catch (e) {}
+    // Also push to backend so other participants see the new count.
+    var url = RAI.config.conditionCountsEndpoint;
+    if (url) {
+      try {
+        fetch(url, { method: 'GET' })
+          .then(function (res) { return res.ok ? res.json() : null; })
+          .then(function (data) { if (data && typeof data === 'object') serverCounts = data; })
+          .catch(function () {});
+      } catch (e) {}
+    }
   }
 
   function upload() {
@@ -280,6 +307,7 @@
     exportCsv: exportCsv,
     exportAll: exportAll,
     getConditionCounts: getConditionCounts,
-    incrementConditionCount: incrementConditionCount
+    incrementConditionCount: incrementConditionCount,
+    fetchConditionCounts: fetchConditionCounts
   };
 })(window);

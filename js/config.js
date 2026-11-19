@@ -68,7 +68,11 @@
 
     // Optional: POST each completed session as JSON to your own endpoint.
     // Leave null to keep everything client-side.
-    uploadEndpoint: null,
+    uploadEndpoint: 'http://localhost:3000/sessions',
+
+    // Endpoint returning { "0.2": n, "0.5": n, "0.8": n } so conditions are
+    // balanced across participants. Falls back to localStorage if null.
+    conditionCountsEndpoint: 'http://localhost:3000/condition-counts',
 
     // Show the participant their own scores at the very end.
     showResultsToParticipant: true,
